@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>THE WAY SOS | The Sanctuary Fortress</title>
+		<style>
+			body { 
+				background-color: #f4f1ea; 
+				color: #2c2c2c; 
+				display: flex; 
+				justify-content: center; 
+				align-items: center; 
+				height: 100vh; 
+				font-family: 'Georgia', serif;
+				margin: 0;
+			}
+			#sanctuary { text-align: center; opacity: 0; transition: opacity 2s; }
+			#pause-timer { font-style: italic; color: #8c8c8c; margin-top: 20px; }
+		</style>
+	</head>
+	<body>
+		<div id="sanctuary">
+			<h1>"Come to Me, all who labor and are heavy laden, and I will give you rest."</h1>
+			<p>— Matthew 11:28 (NASB)</p>
+			<div style="font-weight: bold; margin-top: 30px;">Welcome to the Sanctuary, Beloved Child.</div>
+		</div>
+
+		<div id="pause-timer">The 30-Second Selah is in effect. Be still...</div>
+
+		<script>
+			// The Holy Pause Logic
+			setTimeout(() => {
+				document.getElementById('sanctuary').style.opacity = '1';
+				document.getElementById('pause-timer').style.display = 'none';
+			}, 30000); // 30 Seconds
+		</script>
+	</body>
+</html>
