@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE WAY SOS | Supreme Sanctuary</title>
+    <title>THE WAY SOS | The Sanctuary</title>
     <style>
         :root {
             --parchment: #f4f1ea;
@@ -21,60 +21,64 @@
             align-items: center;
             height: 100vh;
             font-family: 'Georgia', serif;
-            overflow: hidden;
-        }
-        /* The Breathing Animation (6 breaths per minute) */
-        #breathing-text {
-            font-size: 2rem;
-            font-style: italic;
+            padding: 40px;
             text-align: center;
+        }
+        /* The Breathing Cue (Station 04) */
+        #breathing-text {
+            font-size: 1.8rem;
+            font-style: italic;
             animation: breathe 10s ease-in-out infinite;
-            opacity: 0.7;
+            opacity: 0.6;
         }
         @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.05); opacity: 0.7; }
         }
-        /* The Revelation Fades */
+        /* The Full Verse Revelation */
         #revelation {
-            text-align: center;
             opacity: 0;
-            transition: opacity 3s ease-in;
-            position: absolute;
+            display: none;
+            transition: opacity 4s ease-in;
+            max-width: 700px;
         }
-        #revelation h1 { font-weight: normal; font-size: 1.5rem; }
-        /* The Ebenezer Anchor */
-        #ebenezer {
-            position: fixed;
-            bottom: 20px;
-            color: var(--gold);
-            font-size: 0.8rem;
-            letter-spacing: 0.2rem;
+        .verse-text { 
+            font-size: 1.7rem; 
+            line-height: 1.8; 
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .reference { 
+            color: var(--gold); 
+            letter-spacing: 0.15rem; 
+            font-size: 1rem; 
             text-transform: uppercase;
-            opacity: 0;
-            transition: opacity 5s ease-in;
         }
     </style>
 </head>
 <body>
 
-    <div id="breathing-text">Be Still</div>
+    <div id="breathing-text">Be still...</div>
 
     <div id="revelation">
-        <h1>"...and know that I am God"</h1>
-        <p style="color: var(--dust);">Psalm 46:10 (NASB)</p>
+        <div class="verse-text">
+            "Cease striving and know that I am God; <br>
+            I will be exalted among the nations, <br>
+            I will be exalted in the earth."
+        </div>
+        <div class="reference">— PSALM 46:10 (NASB)</div>
     </div>
 
-    <div id="ebenezer">I AM GOD</div>
-
     <script>
-        // The Supreme Logic (Station 04)
+        // The 30-Second Holy Pause (Recalibration)
         setTimeout(() => {
-            // Fade out the breathing cue, fade in the revelation
-            document.getElementById('breathing-text').style.display = 'none';
-            document.getElementById('revelation').style.opacity = '1';
-            document.getElementById('ebenezer').style.opacity = '0.4';
-        }, 30000); // 30-Second Threshold
+            const cue = document.getElementById('breathing-text');
+            const rev = document.getElementById('revelation');
+            
+            cue.style.display = 'none';
+            rev.style.display = 'block';
+            setTimeout(() => { rev.style.opacity = '1'; }, 100);
+        }, 30000); 
     </script>
 </body>
 </html>
