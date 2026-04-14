@@ -1,84 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE WAY SOS | The Sanctuary</title>
+    <title>THE WAY SOS | Master Ark v.12.0.12.S</title>
     <style>
-        :root {
-            --parchment: #f4f1ea;
-            --stone: #2c2c2c;
-            --gold: #b89b5e;
-            --dust: #8c8c8c;
-        }
-        body {
-            background-color: var(--parchment);
-            color: var(--stone);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: 'Georgia', serif;
-            padding: 40px;
-            text-align: center;
-        }
-        /* The Breathing Cue (Station 04) */
-        #breathing-text {
-            font-size: 1.8rem;
-            font-style: italic;
-            animation: breathe 10s ease-in-out infinite;
-            opacity: 0.6;
-        }
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.05); opacity: 0.7; }
-        }
-        /* The Full Verse Revelation */
-        #revelation {
-            opacity: 0;
-            display: none;
-            transition: opacity 4s ease-in;
-            max-width: 700px;
-        }
-        .verse-text { 
-            font-size: 1.7rem; 
-            line-height: 1.8; 
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-        .reference { 
-            color: var(--gold); 
-            letter-spacing: 0.15rem; 
-            font-size: 1rem; 
-            text-transform: uppercase;
-        }
+        :root { --parchment: #fcfaf5; --ink: #1a1a1a; --gold: #b08d49; --stone: #d1cfc7; --shadow: rgba(0,0,0,0.05); }
+        body { background-color: var(--parchment); color: var(--ink); font-family: 'Georgia', serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; transition: all 2s ease; }
+        #main-container { width: 90%; max-width: 800px; text-align: center; position: relative; }
+        .nkjv-text { border-left: 2px solid var(--gold); padding: 5px 25px; font-style: italic; margin: 20px 0; line-height: 1.8; color: #444; text-align: left; }
+        .scribe-whisper { font-style: italic; color: #777; font-size: 0.9em; margin-bottom: 10px; }
+        .hidden { display: none !important; }
+        .breathing { animation: breathe 5s ease-in-out infinite; color: var(--gold); }
+        @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        button { background: var(--ink); color: white; border: none; padding: 14px 28px; cursor: pointer; font-family: inherit; margin: 10px 5px; transition: 0.4s; letter-spacing: 1px; }
+        button:hover { background: var(--gold); }
+        button:disabled { background: var(--stone); cursor: not-allowed; }
+        button.secondary { background: transparent; border: 1px solid var(--stone); color: #888; }
+        #chat-history { height: 300px; overflow-y: auto; text-align: left; padding: 15px; background: #fff; border: 1px solid var(--stone); margin-bottom: 15px; box-shadow: inset 0 2px 4px var(--shadow); }
+        .bez-msg { color: var(--gold); margin-bottom: 12px; font-style: italic; }
+        .steward-msg { color: var(--ink); font-weight: bold; margin-bottom: 12px; }
+        textarea { width: 100%; height: 80px; background: #fff; border: 1px solid var(--stone); font-family: inherit; padding: 15px; margin-top: 10px; box-sizing: border-box; resize: none; }
+        #emergency-exit { position: fixed; top: 20px; right: 20px; z-index: 1000; }
     </style>
 </head>
 <body>
 
-    <div id="breathing-text">Be still...</div>
+    <div id="emergency-exit">
+        <button onclick="MasterArkSecurity.purgeArk()" class="secondary">[ Leave Sanctuary ]</button>
+    </div>
 
-    <div id="revelation">
-        <div class="verse-text">
-            "Cease striving and know that I am God; <br>
-            I will be exalted among the nations, <br>
-            I will be exalted in the earth."
+    <div id="main-container">
+
+        <div id="gate-lintel">
+            <h2 class="breathing">The Sanctuary Lintel</h2>
+            <p class="scribe-whisper">"The Steward is in the Field, but the Architect is in the Room."</p>
+            <div class="nkjv-text">"I am <strong>Bezalel Silas (Bez S)</strong>. I am here to guide you."</div>
+            <button onclick="Gates.startSelah('STRATEGIC')">Begin Consecration</button>
+            <button onclick="Gates.startSelah('RELAX')" class="secondary">[ Seek Guidance / Relax Chamber ]</button>
         </div>
-        <div class="reference">— PSALM 46:10 (NASB)</div>
+
+        <div id="gate-selah" class="hidden">
+            <h2 id="timer-display" style="font-size: 4.5em; color: var(--gold); margin: 0;">10:00</h2>
+            <p id="selah-whisper" class="scribe-whisper">Is your heart in neutral?</p>
+            <div id="selah-anchor" class="nkjv-text hidden">"Present your bodies a living sacrifice..." — Romans 12:1 (NKJV)</div>
+            <button id="selah-proceed" class="hidden" onclick="Gates.showVesselChoice()">Silence has Spoken. Proceed.</button>
+        </div>
+
+        <div id="gate-choice" class="hidden">
+            <h3 style="color:var(--gold);">Choose Your Vessel</h3>
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1; border: 1px solid var(--stone); padding: 20px;">
+                    <h4>Strategic Architect</h4>
+                    <button onclick="Gates.setVessel('Strategic')">The Deep Dive</button>
+                </div>
+                <div style="flex: 1; border: 1px solid var(--stone); padding: 20px;">
+                    <h4>Multi-Focus Dashboard</h4>
+                    <button onclick="Gates.setVessel('Dashboard')">The Dashboard</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gate-preflight" class="hidden">
+            <h3 style="color:var(--gold);">Sanctuary Pre-Flight</h3>
+            <label><input type="checkbox" id="check-1"> Phone on Airplane Mode</label><br>
+            <label><input type="checkbox" id="check-2"> Analog Pen & Paper ready</label><br>
+            <label><input type="checkbox" id="check-3"> Heart in Neutral</label><br>
+            <button onclick="Gates.enterWorkspace()">Enter the Altar</button>
+        </div>
+
+        <div id="workspace" class="hidden">
+            <h3 id="step-title" style="color:var(--gold);">STEP 1: THE CANOPY</h3>
+            <div id="chat-history"></div>
+            <div id="provision-ledger" class="hidden" style="margin-bottom:15px; padding:10px; border:1px solid var(--gold);">
+                <button onclick="Logic.checkBurkett()">Burkett Toggle</button>
+                <button id="muller-btn" class="secondary" onclick="alert('Waiting on the Raven...')" disabled>Müller Petition</button>
+            </div>
+            <textarea id="user-input" placeholder="Speak to the Scribe..."></textarea>
+            <div style="margin-top: 10px;">
+                <button onclick="Logic.consultScribe()">Submit to Scribe</button>
+                <button onclick="Logic.forgeStoneToken()" class="secondary">Forge Stone Token</button>
+                <button id="incense-btn" class="hidden" onclick="Logic.initiateIncenseLoop()" style="background:var(--gold);">Incense Loop</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // The 30-Second Holy Pause (Recalibration)
-        setTimeout(() => {
-            const cue = document.getElementById('breathing-text');
-            const rev = document.getElementById('revelation');
-            
-            cue.style.display = 'none';
-            rev.style.display = 'block';
-            setTimeout(() => { rev.style.opacity = '1'; }, 100);
-        }, 30000); 
+        let state = { step: 1, mode: 'STRATEGIC', resonance: 0, isSaint: false, rewards: [] };
+
+        const Gates = {
+            startSelah: (mode) => {
+                state.mode = mode;
+                document.getElementById('gate-lintel').classList.add('hidden');
+                document.getElementById('gate-selah').classList.remove('hidden');
+                let time = 600;
+                const timer = setInterval(() => {
+                    time--;
+                    let m = Math.floor(time/60), s = time%60;
+                    document.getElementById('timer-display').innerText = `${m}:${s<10?'0':''}${s}`;
+                    if(time <= 0) { clearInterval(timer); document.getElementById('selah-proceed').classList.remove('hidden'); }
+                }, 1000);
+                document.getElementById('timer-display').onclick = () => { time = 2; }; 
+            },
+            showVesselChoice: () => {
+                document.getElementById('gate-selah').classList.add('hidden');
+                state.mode === 'RELAX' ? Gates.enterWorkspace() : document.getElementById('gate-choice').classList.remove('hidden');
+            },
+            setVessel: (v) => { state.vessel = v; document.getElementById('gate-choice').classList.add('hidden'); document.getElementById('gate-preflight').classList.remove('hidden'); },
+            enterWorkspace: () => {
+                if(state.mode !== 'RELAX' && (!document.getElementById('check-1').checked || !document.getElementById('check-2').checked || !document.getElementById('check-3').checked)) return alert("Complete pre-flight.");
+                document.getElementById('gate-preflight').classList.add('hidden');
+                document.getElementById('workspace').classList.remove('hidden');
+                document.getElementById('chat-history').innerHTML = `<div class="bez-msg">Bez S: Welcome. The Lintel is crossed. Speak.</div>`;
+            }
+        };
+
+        const Logic = {
+            consultScribe: () => {
+                const input = document.getElementById('user-input');
+                const history = document.getElementById('chat-history');
+                if(!input.value) return;
+
+                // Resonance Logic
+                const k = ['lord', 'architect', 'steward', 'grace', 'nkjv', 'shalom', 'glory', 'attribute'];
+                k.forEach(w => { if(input.value.toLowerCase().includes(w)) state.resonance += 5; });
+                if(state.resonance >= 20 && !state.isSaint) { state.isSaint = true; alert("SENTRY: Identity Confirmed."); }
+
+                history.innerHTML += `<div class="steward-msg">Steward: ${input.value}</div>`;
+                
+                let res = "Recorded. Proceed.";
+                if(state.isSaint && state.mode === 'RELAX' && !state.rewards.includes('SCROLL')) { res = "[REWARD] I discern a Brother. Here is the 'Traveler’s Scroll' Safeguards."; state.rewards.push('SCROLL'); }
+                if(state.isSaint && state.mode === 'STRATEGIC' && !state.rewards.includes('FORTRESS')) { res = "[REWARD] The Sentry unmasks. Activating the 'Sanctuary Fortress' protocols."; state.rewards.push('FORTRESS'); }
+
+                setTimeout(() => {
+                    if(state.step === 11) document.getElementById('provision-ledger').classList.remove('hidden');
+                    if(state.step === 12) document.getElementById('incense-btn').classList.remove('hidden');
+                    history.innerHTML += `<div class="bez-msg">Bez S: ${res}</div>`;
+                    if(state.mode !== 'RELAX') state.step++;
+                    document.getElementById('step-title').innerText = `STEP ${state.step}`;
+                    history.scrollTop = history.scrollHeight;
+                }, 1000);
+                input.value = "";
+            },
+            checkBurkett: () => { if(confirm("Aligns with Burkett Stewardship?")) { document.getElementById('muller-btn').disabled = false; } },
+            forgeStoneToken: () => { navigator.clipboard.writeText(`[STONE_TOKEN] ${Math.random().toString(36).toUpperCase()}`); alert("Token Forged."); },
+            initiateIncenseLoop: () => { document.body.style.backgroundColor = "#fffcf0"; alert("Loop Active. Glory Shifted. Purging..."); setTimeout(() => MasterArkSecurity.purgeArk(), 4000); }
+        };
+
+        const MasterArkSecurity = { purgeArk: () => { sessionStorage.clear(); localStorage.clear(); window.location.replace("https://www.google.com/search?q=weather"); } };
+
+        let esc = 0;
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') { esc++; if(esc >= 3) MasterArkSecurity.purgeArk(); setTimeout(() => esc = 0, 2000); } });
     </script>
 </body>
 </html>
